@@ -1,0 +1,104 @@
+kind: DataConnectorLink
+version: v1
+definition:
+  name: duckduckgo
+  url:
+    readWriteUrls:
+      read:
+        valueFromEnv: APP_DUCKDUCKGO_READ_URL
+      write:
+        valueFromEnv: APP_DUCKDUCKGO_WRITE_URL
+  headers:
+    Authorization:
+      valueFromEnv: APP_DUCKDUCKGO_AUTHORIZATION_HEADER
+  schema:
+    version: v0.1
+    schema:
+      scalar_types:
+        Boolean:
+          representation:
+            type: boolean
+          aggregate_functions: {}
+          comparison_operators: {}
+        Float:
+          representation:
+            type: float64
+          aggregate_functions: {}
+          comparison_operators: {}
+        HeaderMap:
+          representation:
+            type: json
+          aggregate_functions: {}
+          comparison_operators: {}
+        Int:
+          representation:
+            type: integer
+          aggregate_functions: {}
+          comparison_operators: {}
+        Json:
+          representation:
+            type: json
+          aggregate_functions: {}
+          comparison_operators: {}
+        String:
+          representation:
+            type: string
+          aggregate_functions: {}
+          comparison_operators: {}
+      object_types:
+        web_search:
+          fields:
+            body:
+              type:
+                type: named
+                name: String
+            href:
+              type:
+                type: named
+                name: String
+            title:
+              type:
+                type: named
+                name: String
+      collections: []
+      functions:
+        - name: web_search
+          description: |-
+            Perform a web search using DuckDuckGo and return the results.
+                Takes in default input arguments for limit and region.
+                limit is the number of results to return, default 10.
+                region is the region to search in, default "us-en".
+
+                Args:
+                    search_term (str): The term to search for.
+
+                Returns:
+                    List[Result]: A list of search result objects.
+          arguments:
+            limit:
+              type:
+                type: named
+                name: Int
+            region:
+              type:
+                type: named
+                name: String
+            search_term:
+              type:
+                type: named
+                name: String
+          result_type:
+            type: array
+            element_type:
+              type: named
+              name: web_search
+      procedures: []
+    capabilities:
+      version: 0.1.6
+      capabilities:
+        query:
+          aggregates: {}
+          variables: {}
+          explain: {}
+        mutation:
+          transactional: {}

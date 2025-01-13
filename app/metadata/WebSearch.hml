@@ -1,0 +1,77 @@
+---
+kind: Command
+version: v1
+definition:
+  name: WebSearch
+  outputType: "[WebSearch!]!"
+  arguments:
+    - name: searchTerm
+      type: String!
+    - name: limit
+      type: Int!
+    - name: region
+      type: String!
+  source:
+    dataConnectorName: duckduckgo
+    dataConnectorCommand:
+      function: web_search
+    argumentMapping:
+      searchTerm: search_term
+      limit: limit
+      region: region
+  graphql:
+    rootFieldName: webSearch
+    rootFieldKind: Query
+  description: |-
+    Perform a web search using DuckDuckGo and return the results.
+    Takes in default input arguments for limit and region.
+    limit is the number of results to return, default 10.
+    region is the region to search in, default "us-en".
+
+    Args:
+        search_term (str): The term to search for.
+
+    Returns:
+        List[Result]: A list of search result objects.
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: WebSearch
+  permissions:
+    - role: admin
+      allowExecution: true
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: WebSearch
+  fields:
+    - name: body
+      type: String!
+    - name: href
+      type: String!
+    - name: title
+      type: String!
+  graphql:
+    typeName: WebSearch
+    inputTypeName: WebSearchInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: duckduckgo
+      dataConnectorObjectType: web_search
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: WebSearch
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - body
+          - href
+          - title
+
